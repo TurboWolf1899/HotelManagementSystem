@@ -12,8 +12,8 @@ struct Soba
 
 struct Gost
 {
-    char ime[50];
-    char prezime[50];
+    char ime[51];
+    char prezime[101];
     unsigned int brojSobe;
     unsigned int vrijemeBoravka;
 };
@@ -46,6 +46,19 @@ void dodavanjeSobe(Soba soba)
     file.close();
 }
 
+void ispisSoba(Soba soba)
+{
+    fstream file;
+    file.open("sobe.bin", ios::binary | ios::in);
+    while (file.read((char*)&soba.brojSobe, sizeof(soba.brojSobe)) && file.read((char*)&soba.tipSobe, sizeof(soba.tipSobe)) && file.read((char*)&soba.cijena, sizeof(soba.cijena)))
+    {
+        cout << "Broj sobe: " << soba.brojSobe << endl;
+        cout << "Tip sobe: " << soba.tipSobe << endl;
+        cout << "Cijena: " << soba.cijena << endl;
+    }
+    file.close();
+}
+
 void pause()
 {
     cout << endl << "Pritisnite enter za nastavak...";
@@ -57,6 +70,7 @@ void pause()
 int main()
 {
     int izbor;
+    Soba soba = { 0, '\0', 0.0 }; //napravio sam ovo da ispis soba zapravo dela, dakle postavim sve vrijednosti na nulu
     while (1)
     {
         system("cls");
@@ -74,7 +88,6 @@ int main()
         switch (izbor){
         case 1:
         {
-            Soba soba;
             cout << "Upisite broj sobe: ";
             cin >> soba.brojSobe;
             cout << "Upisite klasu sobe (A, B, C): ";
@@ -87,7 +100,8 @@ int main()
 
         case 2:
         {
-
+            ispisSoba(soba);
+            break;
         }
         case 3:
         {
@@ -121,5 +135,4 @@ int main()
         }
         pause();
     }
-    return 0;
 }
