@@ -42,6 +42,7 @@ void dodavanjeSobe(Soba soba)
     file.write((char*)&soba.brojSobe, sizeof(soba.brojSobe));
     file.write((char*)&soba.tipSobe, sizeof(soba.tipSobe));
     file.write((char*)&soba.cijena, sizeof(soba.cijena));
+
     file.close();
 }
 
@@ -81,6 +82,7 @@ int main()
             cout << "Unesite cijenu za jednu noc: ";
             cin >> soba.cijena;
             dodavanjeSobe(soba);
+            break;
         }
 
         case 2:
@@ -111,6 +113,7 @@ int main()
         case 8:
         {
             cout << "Izlaz iz programa!";
+            return 0;
             break;
         }
         default :
