@@ -59,6 +59,14 @@ void ispisSoba(Soba soba)
     file.close();
 }
 
+void dodavanjeGostiju(Gost* gost, int index)
+{
+    fstream file;
+    file.open("gosti.bin", ios::binary | ios::app);
+    file.write(reinterpret_cast<char* >(gost), sizeof(Gost)*index);
+    file.close();
+}
+
 void pause()
 {
     cout << endl << "Pritisnite enter za nastavak...";
@@ -71,6 +79,7 @@ int main()
 {
     int izbor;
     Soba soba = { 0, '\0', 0.0 }; //napravio sam ovo da ispis soba zapravo dela, dakle postavim sve vrijednosti na nulu
+    Gost* gost = new Gost[100];
     while (1)
     {
         system("cls");
@@ -105,7 +114,33 @@ int main()
         }
         case 3:
         {
+            int index = 0;
+            while (index < 100)
+            {
+                cout << "Unesite ime gosta: ";
+                cin.ignore();
+                cin.getline(gost[index].ime, sizeof(gost[index].ime));
 
+                cout << "Unesite prezime gosta: ";
+                cin.getline(gost[index].prezime, sizeof(gost[index].prezime));
+
+                cout << "Unesite broj sobe gosta: ";
+                cin >> gost[index].brojSobe;
+
+                cout << "Unesite vrijeme boravka gosta: ";
+                cin >> gost[index].vrijemeBoravka;
+
+                index++;
+
+                cout << "Zelite li unijeti jos gostiju? (da/ne): ";
+                string izbor;
+                cin >> izbor;
+
+                if (izbor != "da")
+                    break;
+            }
+            dodavanjeGostiju(gost, index);
+            break;
         }
         case 4:
         {
