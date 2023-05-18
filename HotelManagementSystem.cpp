@@ -1,9 +1,33 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 
+struct Soba
+{
+    unsigned int brojSobe;
+    char tipSobe;
+    double cijena;
+};
 
+struct Gost
+{
+    char ime[50];
+    char prezime[50];
+    unsigned int brojSobe;
+    unsigned int vrijemeBoravka;
+};
 
+void dodavanjeSobe(Soba soba)
+{
+    if (soba.brojSobe < 0)
+    {
+        cout << "Krivi unos sobe";
+        return;
+    }
+    fstream file;
+    file.open("sobe.bin", )
+}
 
 void pause()
 {
@@ -33,6 +57,8 @@ int main()
         switch (izbor){
         case 1:
         {
+            Soba soba;
+            cout << "Upisite broj sobe: ";
 
         }
 
