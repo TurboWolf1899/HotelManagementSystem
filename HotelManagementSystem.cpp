@@ -22,11 +22,27 @@ void dodavanjeSobe(Soba soba)
 {
     if (soba.brojSobe < 0)
     {
-        cout << "Krivi unos sobe";
+        cout << "Krivi unos sobe" << endl;
         return;
     }
+
+    switch (soba.tipSobe)
+    {
+    case 'A':
+    case 'B':
+    case 'C':
+        break;
+    default:
+        cout << "Krivi unos klase!" << endl;
+        return;
+    }
+
     fstream file;
-    file.open("sobe.bin", )
+    file.open("sobe.bin", ios::binary | ios::app);
+    file.write((char*)&soba.brojSobe, sizeof(soba.brojSobe));
+    file.write((char*)&soba.tipSobe, sizeof(soba.tipSobe));
+    file.write((char*)&soba.cijena, sizeof(soba.cijena));
+    file.close();
 }
 
 void pause()
@@ -59,7 +75,12 @@ int main()
         {
             Soba soba;
             cout << "Upisite broj sobe: ";
-
+            cin >> soba.brojSobe;
+            cout << "Upisite klasu sobe (A, B, C): ";
+            cin >> soba.tipSobe;
+            cout << "Unesite cijenu za jednu noc: ";
+            cin >> soba.cijena;
+            dodavanjeSobe(soba);
         }
 
         case 2:
