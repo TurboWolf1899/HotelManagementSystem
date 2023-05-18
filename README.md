@@ -1,7 +1,7 @@
 # HotelManagementSystem
  
  1.
-UNOS SOBE:\n
+UNOS SOBE:
 	-unosimo broj sobe u file
 	-unosimo klasu sobe (A,B,C) u file
 	-unosimo cijenu sobe za 1 noć u file
