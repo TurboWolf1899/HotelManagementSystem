@@ -35,7 +35,9 @@ void dodavanjeSobe(Soba soba)
     default:
         cout << "Krivi unos klase!" << endl;
         return;
-    }
+    }/* provjerava jel upisano A, B ili C, ako je onda se program nastavlja a
+    ako ne onda se ispise kaj se vec ispise te se vraca u main. Malo cudno je ali ne radi mi
+    sa if-om nekako.*/
 
     fstream file;
     file.open("sobe.bin", ios::binary | ios::app);
@@ -94,6 +96,7 @@ int main()
         cout << "8. Izlaz iz programa" << endl;
         cout << "vas odabir: ";
         cin >> izbor;
+
         switch (izbor){
         case 1:
         {
@@ -103,6 +106,7 @@ int main()
             cin >> soba.tipSobe;
             cout << "Unesite cijenu za jednu noc: ";
             cin >> soba.cijena;
+
             dodavanjeSobe(soba);
             break;
         }
