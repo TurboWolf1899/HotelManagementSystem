@@ -4,6 +4,7 @@ using namespace std;
 
 
 
+
 void pause()
 {
     cout << endl << "Pritisnite enter za nastavak...";
