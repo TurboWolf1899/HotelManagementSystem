@@ -63,9 +63,115 @@ void ispisSoba(Soba soba)
 
 void dodavanjeGostiju(Gost* gost, int index)
 {
+    /*fstream file1;
+    file1.open("sobe.bin", ios::binary | ios::in);
+
+    if (!file1)
+    {
+        cout << "Greska pri otvaranju datoteke!" << endl;
+        return;
+    }
+
+    bool roomExists = false;
+    Soba soba;
+
+    while (file1.read(reinterpret_cast<char*>(&soba), sizeof(Soba)))
+    {
+        if (soba.brojSobe == gost[index].brojSobe)
+        {
+            roomExists = true;
+            break;
+        }
+    }
+    file1.close();
+
+    if (!roomExists)
+    {
+        cout << "Soba ne postoji!" << endl;
+        return;
+    }                   Cijeli kod koji provjerava jel soba uopce postoji ne dela
+    
+    
+                                jos.                                                     
+                                
+                                ne odustajem.                                                            */
+
+
+    fstream file2;
+    file2.open("gosti.txt", ios::app);
+    for (int i = 0; i < index; i++)
+    {
+        file2 << "Ime: " << gost[i].ime << endl;
+        file2 << "Prezime: " << gost[i].prezime << endl;
+        file2 << "Broj sobe: " << gost[i].brojSobe << endl;
+        file2 << "Vrijeme boravka: " << gost[i].vrijemeBoravka << " noci" << endl;
+        file2 << endl;
+    }
+    
+    file2.close();
+}
+
+void ispisSlobodnihSoba()
+{
+    fstream file1;
+    file1.open("gosti.txt", ios::in);
+
+    if (!file1)
+    {
+        cout << "Greska pri otvaranju datoteke!" << endl;
+        return;
+    }
+
+    int ukupnoSoba = 0;
+    int zauzetihSoba = 0;
+    Gost gost;
+    Soba soba;
+
+    while (file1.read(reinterpret_cast<char*>(&gost), sizeof(Gost)))
+    {
+        if (strlen(gost.ime) > 0)
+            zauzetihSoba++;
+    }
+    file1.close();
+
+    fstream file2;
+    file2.open("sobe.bin", ios::in);
+
+    if (!file2)
+    {
+        cout << "Greska pri otvaranju datoteke!" << endl;
+        return;
+    }
+
+    while (file2.read(reinterpret_cast<char*>(&soba), sizeof(Soba)))
+        ukupnoSoba++; //doslovno treba delati al ne dela.
+
+    int dostupneSobe = ukupnoSoba - zauzetihSoba;
+
+    if (dostupneSobe > 0)
+        cout << "Broj slobodnih soba: " << dostupneSobe << endl;
+    else
+        cout << "Nema slobodnih soba." << endl;
+
+    file2.close();
+}// dela al ne tocno, kad upisem jednu sobu kaze da nema slobodnih soba, a kad upisem drugu onda pise da ima samo jedna
+
+void ispisGostiju()
+{
     fstream file;
-    file.open("gosti.bin", ios::binary | ios::app);
-    file.write(reinterpret_cast<char* >(gost), sizeof(Gost)*index);
+    file.open("gosti.txt", ios::in);
+    if (!file)
+    {
+        cout << "Greska pri otvaranju datoteke!" << endl;
+        return;
+    }
+
+    string line;
+    while (getline(file, line))
+    {
+        cout << line << endl;
+    }
+
     file.close();
 }
 
@@ -148,11 +254,13 @@ int main()
         }
         case 4:
         {
-
+            ispisGostiju();
+            break;
         }
         case 5:
         {
-
+            ispisSlobodnihSoba();
+            break;
         }
         case 6:
         {

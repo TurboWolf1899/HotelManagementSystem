@@ -1,0 +1,5 @@
+Ime: a
+Prezime: b
+Broj sobe: 3
+Vrijeme boravka: 4 noci
+
