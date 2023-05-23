@@ -84,7 +84,6 @@ void dodavanjeSobe(Soba soba)
 }
 
 
-
 void ispisSoba(Soba soba)
 {
     fstream file;
@@ -229,7 +228,7 @@ void ispisSlobodnihSoba()
     }
 
     while (file2.read(reinterpret_cast<char*>(&soba), sizeof(Soba)))
-        ukupnoSoba++; //doslovno treba delati al ne dela.
+        ukupnoSoba++;
 
     int dostupneSobe = ukupnoSoba - zauzetihSoba;
 
