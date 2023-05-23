@@ -240,7 +240,10 @@ void ispisSlobodnihSoba()
     file2.close();
 }// dela al ne tocno, kad upisem jednu sobu kaze da nema slobodnih soba, a kad upisem drugu onda pise da ima samo jedna
 
+void brisanjeGostiju()
+{
 
+}
 
 void uredenjeSobe()
 {
