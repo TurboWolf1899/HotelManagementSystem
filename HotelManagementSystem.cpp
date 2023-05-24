@@ -48,15 +48,15 @@ void dodavanjeSobe(Soba soba)
 
     Soba existingSoba;
     bool roomExists = false;
-    while (file.read(reinterpret_cast<char*>(&existingSoba.brojSobe), sizeof(existingSoba.brojSobe)))
+    while (file.read((char*)&existingSoba.brojSobe, sizeof(existingSoba.brojSobe)))
     {
         if (existingSoba.brojSobe == soba.brojSobe)
         {
             roomExists = true;
             break;
         }
-        file.read(reinterpret_cast<char*>(&existingSoba.tipSobe), sizeof(existingSoba.tipSobe));
-        file.read(reinterpret_cast<char*>(&existingSoba.cijena), sizeof(existingSoba.cijena));
+        file.read((char*)&existingSoba.tipSobe, sizeof(existingSoba.tipSobe));
+        file.read((char*)&existingSoba.cijena, sizeof(existingSoba.cijena));
     }
 
     file.close();
@@ -131,35 +131,36 @@ void dodavanjeGostiju(Gost* gost)
             break;
     }
 
-    fstream file1;
-    file1.open("sobe.bin", ios::binary | ios::in);
+    fstream file;
+    file.open("sobe.bin", ios::binary | ios::in);
 
-    if (!file1)
+    if (!file)
     {
         cout << "Greska pri otvaranju datoteke!" << endl;
         return;
     }
 
-    bool roomExists = false;
+    bool AroomExists = false;
     Soba soba;
 
-    while (file1.read(reinterpret_cast<char*>(&soba.brojSobe), sizeof(soba.brojSobe)) &&
-        file1.read(reinterpret_cast<char*>(&soba.tipSobe), sizeof(soba.tipSobe)) &&
-        file1.read(reinterpret_cast<char*>(&soba.cijena), sizeof(soba.cijena)))
+    while (file.read((char*)&soba.brojSobe, sizeof(soba.brojSobe)) && file.read((char*)&soba.tipSobe, sizeof(soba.tipSobe)) && file.read((char*)&soba.cijena, sizeof(soba.cijena)))
     {
         if (soba.brojSobe == gost[index - 1].brojSobe)
         {
-            roomExists = true;
+            AroomExists = true;
             break;
         }
     }
-    file1.close();
+    file.close();
 
-    if (!roomExists)
+    if (!AroomExists)
     {
         cout << "Soba ne postoji!" << endl;
         return;
     }
+
+    //rezervirano za provjeru jel soba zauzeta
+
 
     fstream file2;
     file2.open("gosti.txt", ios::app);
@@ -197,48 +198,9 @@ void ispisGostiju()
 
 void ispisSlobodnihSoba()
 {
-    fstream file1;
-    file1.open("gosti.txt", ios::in);
+    
+}
 
-    if (!file1)
-    {
-        cout << "Greska pri otvaranju datoteke!" << endl;
-        return;
-    }
-
-    int ukupnoSoba = 0;
-    int zauzetihSoba = 0;
-    Gost gost;
-    Soba soba;
-
-    while (file1.read(reinterpret_cast<char*>(&gost), sizeof(Gost)))
-    {
-        if (strlen(gost.ime) != 0)
-            zauzetihSoba++;
-    }
-    file1.close();
-
-    fstream file2;
-    file2.open("sobe.bin", ios::in);
-
-    if (!file2)
-    {
-        cout << "Greska pri otvaranju datoteke!" << endl;
-        return;
-    }
-
-    while (file2.read(reinterpret_cast<char*>(&soba), sizeof(Soba)))
-        ukupnoSoba++;
-
-    int dostupneSobe = ukupnoSoba - zauzetihSoba;
-
-    if (dostupneSobe > 0)
-        cout << "Broj slobodnih soba: " << dostupneSobe << endl;
-    else
-        cout << "Nema slobodnih soba." << endl;
-
-    file2.close();
-}// dela al ne tocno, kad upisem jednu sobu kaze da nema slobodnih soba, a kad upisem drugu onda pise da ima samo jedna
 
 void brisanjeGostiju()
 {
@@ -247,49 +209,7 @@ void brisanjeGostiju()
 
 void uredenjeSobe()
 {
-    int brojSobe;
-    cout << "Unesite broj sobe koju zelite urediti: ";
-    cin >> brojSobe;
-
-    fstream file;
-    file.open("sobe.bin", ios::binary | ios::in | ios::out);
-    if (!file)
-    {
-        cout << "Greska pri otvaranju datoteke!" << endl;
-        return;
-    }
-
-    Soba soba;
-    bool sobaFound = false;
-
-    while (file.read(reinterpret_cast<char*>(&soba), sizeof(Soba)))
-    {
-        if (soba.brojSobe == brojSobe)
-        {
-            sobaFound = true;
-            break;
-        }
-    }
-
-    if (sobaFound)
-    {
-        cout << "Unesite novu klasu sobe (A, B, C): ";
-        cin >> soba.tipSobe;
-
-        cout << "Unesite novu cijenu za jednu noc: ";
-        cin >> soba.cijena;
-
-        file.seekp(static_cast<std::streampos>(file.tellg()) - static_cast<std::streampos>(sizeof(Soba)));
-        file.write(reinterpret_cast<char*>(&soba), sizeof(Soba));
-
-        cout << "Soba je uspjesno uredena." << endl;
-    }
-    else
-    {
-        cout << "Soba nije pronadena." << endl;
-    }
-
-    file.close();
+    
 }
 
 void pause()
@@ -303,7 +223,7 @@ void pause()
 int main()
 {
     int izbor;
-    Soba soba = { 0, '\0', 0.0 }; //napravio sam ovo da ispis soba zapravo dela, dakle postavim sve vrijednosti na nulu
+    Soba soba = { 0, '\0', 0.0 };
     Gost* gost = new Gost[100];
     while (1)
     {
@@ -374,6 +294,7 @@ int main()
         }
         default :
             cout << "Krivi unos!";
+            break;
         }
         pause();
     }
