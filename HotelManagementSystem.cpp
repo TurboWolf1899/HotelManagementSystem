@@ -159,7 +159,6 @@ void dodavanjeGostiju(Gost* gost)
         return;
     }
 
-    //rezervirano za provjeru jel soba zauzeta
 
 
     fstream file2;
@@ -196,16 +195,105 @@ void ispisGostiju()
     file.close();
 }
 
-void ispisSlobodnihSoba()
+/*void ispisSlobodnihSoba()
 {
-    
+    std::ifstream file("sobe.bin", std::ios::binary);
+    if (!file)
+    {
+        std::cout << "Greska pri otvaranju datoteke!" << std::endl;
+        return;
+    }
+
+    int brojSlobodnihSoba = 0;
+    Soba soba;
+
+    while (file.read(reinterpret_cast<char*>(&soba), sizeof(Soba)))
+    {
+        if (soba.brojSobe > 0)
+        {
+            // Provjeri je li soba slobodna
+            bool slobodnaSoba = true;
+
+            std::ifstream gostiFile("gosti.txt");
+            if (gostiFile)
+            {
+                Gost gost;
+                while (gostiFile.read(reinterpret_cast<char*>(&gost), sizeof(Gost)))
+                {
+                    if (gost.brojSobe == soba.brojSobe)
+                    {
+                        slobodnaSoba = false;
+                        break;
+                    }
+                }
+                gostiFile.close();
+            }
+
+            if (slobodnaSoba)
+            {
+                brojSlobodnihSoba++;
+            }
+        }
+    }
+
+    file.close();
+
+    std::cout << "Broj slobodnih soba: " << brojSlobodnihSoba << std::endl;
 }
+*/
 
 
 void brisanjeGostiju()
 {
+    fstream inputFile("gosti.txt", ios::in);
+    if (!inputFile)
+    {
+        cout << "Greska pri otvaranju datoteke!" << endl;
+        return;
+    }
 
+    fstream tempFile("temp.txt", ios::out);  // Privremena datoteka za pohranu promijenjenih podataka
+
+    cout << "Unesite ime gosta za brisanje: ";
+    char ime[51];
+    cin.ignore();
+    cin.getline(ime, sizeof(ime));
+
+    cout << "Unesite prezime gosta za brisanje: ";
+    char prezime[101];
+    cin.getline(prezime, sizeof(prezime));
+
+    bool deleted = false;  // Zastavica - provjera ako je našto izbrisano
+
+    string line;
+    while (getline(inputFile, line))
+    {
+        if (line.find("Ime: " + string(ime)) != string::npos && getline(inputFile, line) && line.find("Prezime: " + string(prezime)) != string::npos)
+        {
+            // Skip
+            getline(inputFile, line);  // Skip "Broj sobe: ..."
+            getline(inputFile, line);  // Skip "Vrijeme boravka: ..."
+            deleted = true;
+            continue;
+        }
+
+        tempFile << line << endl;
+    }
+
+    inputFile.close();
+    tempFile.close();
+
+    remove("gosti.txt");            // Micanje originalne datoteke
+    rename("temp.txt", "gosti.txt"); // Preimenovanje privremene datoteke koja mijenja originalnu
+
+    if (deleted)
+        cout << "Gost uspjesno obrisan." << endl;
+    else
+        cout << "Gost s tim imenom i prezimenom nije pronadjen." << endl;
 }
+
+
+
 
 void uredenjeSobe()
 {
@@ -272,12 +360,13 @@ int main()
         }
         case 5:
         {
-            ispisSlobodnihSoba();
+            //ispisSlobodnihSoba();
             break;
         }
         case 6:
         {
-            
+            brisanjeGostiju();
+             
             break;
         }
         case 7:
