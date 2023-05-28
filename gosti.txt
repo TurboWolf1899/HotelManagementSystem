@@ -1,9 +1,0 @@
-
-
-
-
-Ime: r
-Prezime: H
-Broj sobe: 2
-Vrijeme boravka: 3 noci
-
