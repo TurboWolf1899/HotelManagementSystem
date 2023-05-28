@@ -164,12 +164,15 @@ void dodavanjeGostiju(Gost* gost)
         file2 << "Prezime: " << gost[i].prezime << endl;
         file2 << "Broj sobe: " << gost[i].brojSobe << endl;
         file2 << "Vrijeme boravka: " << gost[i].vrijemeBoravka << " noci" << endl;
-        file2 << endl;
     }
 
     file2.close();
 }
 
+/*void gostiUpdater()
+{
+    // TO DO: napraviti funkciju koja ce nakon sto su podaci sobe uredeni takoder azurirati podatke sobe pridruzene gostima
+}*/
 
 void ispisGostiju()
 {
@@ -190,52 +193,11 @@ void ispisGostiju()
     file.close();
 }
 
-/*void ispisSlobodnihSoba()
+void ispisSlobodnihSoba()
 {
-    std::ifstream file("sobe.bin", std::ios::binary);
-    if (!file)
-    {
-        std::cout << "Greska pri otvaranju datoteke!" << std::endl;
-        return;
-    }
-
-    int brojSlobodnihSoba = 0;
-    Soba soba;
-
-    while (file.read(reinterpret_cast<char*>(&soba), sizeof(Soba)))
-    {
-        if (soba.brojSobe > 0)
-        {
-            // Provjeri je li soba slobodna
-            bool slobodnaSoba = true;
-
-            std::ifstream gostiFile("gosti.txt");
-            if (gostiFile)
-            {
-                Gost gost;
-                while (gostiFile.read(reinterpret_cast<char*>(&gost), sizeof(Gost)))
-                {
-                    if (gost.brojSobe == soba.brojSobe)
-                    {
-                        slobodnaSoba = false;
-                        break;
-                    }
-                }
-                gostiFile.close();
-            }
-
-            if (slobodnaSoba)
-            {
-                brojSlobodnihSoba++;
-            }
-        }
-    }
-
-    file.close();
-
-    std::cout << "Broj slobodnih soba: " << brojSlobodnihSoba << std::endl;
+    
 }
-*/
+
 
 
 void brisanjeGostiju()
@@ -284,7 +246,7 @@ void brisanjeGostiju()
     if (deleted)
         cout << "Gost uspjesno obrisan." << endl;
     else
-        cout << "Gost s tim imenom i prezimenom nije pronadjen." << endl;
+        cout << "Gost s tim imenom i prezimenom nije pronaden." << endl;
 }
 
 
@@ -406,7 +368,7 @@ int main()
         }
         case 5:
         {
-            //ispisSlobodnihSoba();
+            ispisSlobodnihSoba();
             break;
         }
         case 6:
