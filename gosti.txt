@@ -1,8 +1,0 @@
-Ime: a
-Prezime: a
-Broj sobe: 5
-Vrijeme boravka: 5 noci
-Ime: c
-Prezime: c
-Broj sobe: 7
-Vrijeme boravka: 4 noci

@@ -49,15 +49,13 @@ void dodavanjeSobe(Soba soba)
 
     Soba postojecaSoba;
     bool sobaPostoji = false;
-    while (file.read((char*)&postojecaSoba.brojSobe, sizeof(postojecaSoba.brojSobe)))
+    while (file.read((char*)&postojecaSoba.brojSobe, sizeof(postojecaSoba.brojSobe)) && file.read((char*)&postojecaSoba.tipSobe, sizeof(postojecaSoba.tipSobe)) && file.read((char*)&postojecaSoba.cijena, sizeof(postojecaSoba.cijena)))
     {
         if (postojecaSoba.brojSobe == soba.brojSobe)
         {
             sobaPostoji = true;
             break;
         }
-        file.read((char*)&postojecaSoba.tipSobe, sizeof(postojecaSoba.tipSobe));
-        file.read((char*)&postojecaSoba.cijena, sizeof(postojecaSoba.cijena));
     }//provjerava jel unesen broj sobe vec postoji
 
     file.close();
@@ -169,10 +167,6 @@ void dodavanjeGostiju(Gost* gost)
     file2.close();
 }
 
-/*void gostiUpdater()
-{
-    // TO DO: napraviti funkciju koja ce nakon sto su podaci sobe uredeni takoder azurirati podatke sobe pridruzene gostima
-}*/
 
 void ispisGostiju()
 {
@@ -268,18 +262,18 @@ void uredenjeSobe()
     cin >> brojSobe;
 
     Soba soba;
-    bool sobaPostoji = false;
+    bool sobaPostoji1 = false;
 
     while (file.read((char*)&soba.brojSobe, sizeof(soba.brojSobe)) && file.read((char*)&soba.tipSobe, sizeof(soba.tipSobe)) && file.read((char*)&soba.cijena, sizeof(soba.cijena)))
     {
         if (soba.brojSobe == brojSobe)
         {
-            sobaPostoji = true;
+            sobaPostoji1 = true;
             break;
         }
     }
 
-    if (!sobaPostoji)
+    if (!sobaPostoji1)
     {
         cout << "Soba ne postoji!" << endl;
         file.close();
@@ -287,24 +281,76 @@ void uredenjeSobe()
     }
 
     cout << "Unesite novi broj sobe: ";
-    cin >> soba.brojSobe;
+    unsigned int noviBrojSobe;
+    cin >> noviBrojSobe;
+
+    Soba postojecaSoba;
+    bool sobaPostoji2 = false;
+    while (file.read((char*)&postojecaSoba.brojSobe, sizeof(postojecaSoba.brojSobe)) && file.read((char*)&postojecaSoba.tipSobe, sizeof(postojecaSoba.tipSobe)) && file.read((char*)&postojecaSoba.cijena, sizeof(postojecaSoba.cijena)))
+    {
+        if (postojecaSoba.brojSobe == noviBrojSobe)
+        {
+            sobaPostoji2 = true;
+            break;
+        }
+    }//provjerava jel unesen broj sobe vec postoji
+
+    if (sobaPostoji2)
+    {
+        cout << "Soba s tim brojem vec postoji!" << endl;
+        return;
+    }
+
     cout << "Unesite novu klasu sobe (A, B, C): ";
-    cin >> soba.tipSobe;
+    char novaKlasa;
+    cin >> novaKlasa;
     cout << "Unesite novu cijenu za jednu noc: ";
-    cin >> soba.cijena;
+    double novaCijena;
+    cin >> novaCijena;
 
     // Pomice fileov pokazivac nazad na pocetak
     file.seekp(file.tellg() - static_cast<streampos>(sizeof(soba.brojSobe) + sizeof(soba.tipSobe) + sizeof(soba.cijena)));
 
     // Upisuje azurirane podatke nazad u datoteku
-    file.write((char*)&soba.brojSobe, sizeof(soba.brojSobe));
-    file.write((char*)&soba.tipSobe, sizeof(soba.tipSobe));
-    file.write((char*)&soba.cijena, sizeof(soba.cijena));
+    file.write((char*)&noviBrojSobe, sizeof(noviBrojSobe));
+    file.write((char*)&novaKlasa, sizeof(novaKlasa));
+    file.write((char*)&novaCijena, sizeof(novaCijena));
 
     file.close();
 
+    // Update room number information in gosti.txt
+    ifstream gostiFile("gosti.txt");
+    if (!gostiFile)
+    {
+        cout << "Greska pri otvaranju datoteke gosti.txt!" << endl;
+        return;
+    }
+
+    ofstream tempFile("temp.txt"); // Temporary file to store updated data
+
+    string line;
+    while (getline(gostiFile, line))
+    {
+        if (line.find("Broj sobe: ") != string::npos)
+        {
+            // Update the room number
+            tempFile << "Broj sobe: " << noviBrojSobe << endl;
+        }
+        else
+        {
+            tempFile << line << endl;
+        }
+    }
+
+    gostiFile.close();
+    tempFile.close();
+
+    remove("gosti.txt");            // Remove the original file
+    rename("temp.txt", "gosti.txt"); // Rename the temporary file to replace the original
+
     cout << "Soba uspjesno uredena." << endl;
 }
+
 
 
 
