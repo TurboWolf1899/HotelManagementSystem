@@ -318,7 +318,7 @@ void uredenjeSobe()
 
     file.close();
 
-    // Update room number information in gosti.txt
+    // Azurira broj sobe u gosti.txt
     ifstream gostiFile("gosti.txt");
     if (!gostiFile)
     {
@@ -326,14 +326,14 @@ void uredenjeSobe()
         return;
     }
 
-    ofstream tempFile("temp.txt"); // Temporary file to store updated data
+    ofstream tempFile("temp.txt"); // Privremena datoteka za pohranu promijenjenih podataka 
 
     string line;
     while (getline(gostiFile, line))
     {
         if (line.find("Broj sobe: ") != string::npos)
         {
-            // Update the room number
+            // Azurira broj sobe
             tempFile << "Broj sobe: " << noviBrojSobe << endl;
         }
         else
@@ -345,8 +345,8 @@ void uredenjeSobe()
     gostiFile.close();
     tempFile.close();
 
-    remove("gosti.txt");            // Remove the original file
-    rename("temp.txt", "gosti.txt"); // Rename the temporary file to replace the original
+    remove("gosti.txt");            
+    rename("temp.txt", "gosti.txt");
 
     cout << "Soba uspjesno uredena." << endl;
 }
