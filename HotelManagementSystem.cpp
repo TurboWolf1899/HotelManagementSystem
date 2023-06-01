@@ -95,9 +95,11 @@ void ispisSoba(Soba soba)
 
     while (file.read((char*)&soba.brojSobe, sizeof(soba.brojSobe)) && file.read((char*)&soba.tipSobe, sizeof(soba.tipSobe)) && file.read((char*)&soba.cijena, sizeof(soba.cijena)))
     {
+        cout << "-----------------------------" << endl;
         cout << "Broj sobe: " << soba.brojSobe << endl;
         cout << "Tip sobe: " << soba.tipSobe << endl;
         cout << "Cijena: " << soba.cijena << endl;
+        
     }
     file.close();
 }
@@ -162,6 +164,7 @@ void dodavanjeGostiju(Gost* gost)
         file2 << "Prezime: " << gost[i].prezime << endl;
         file2 << "Broj sobe: " << gost[i].brojSobe << endl;
         file2 << "Vrijeme boravka: " << gost[i].vrijemeBoravka << " noci" << endl;
+        
     }
 
     file2.close();
@@ -182,15 +185,62 @@ void ispisGostiju()
     while (getline(file, line))
     {
         cout << line << endl;
+        
     }
-
+   
     file.close();
 }
 
 void ispisSlobodnihSoba()
 {
-    
+    fstream file;
+    file.open("sobe.bin", ios::binary | ios::in);
+    if (!file)
+    {
+        cout << "Greska pri otvaranju datoteke!" << endl;
+        return;
+    }
+
+    Soba soba;
+    bool sobaZauzeta;
+    unsigned int brojac = 0;
+
+    while (file.read((char*)&soba.brojSobe, sizeof(soba.brojSobe)) && file.read((char*)&soba.tipSobe, sizeof(soba.tipSobe)) && file.read((char*)&soba.cijena, sizeof(soba.cijena)))
+    {
+        sobaZauzeta = false;
+
+        // Check if the room is occupied by a guest
+        fstream gostiFile("gosti.txt", ios::in);
+        if (gostiFile)
+        {
+            string line;
+            while (getline(gostiFile, line))
+            {
+                if (line.find("Broj sobe: " + to_string(soba.brojSobe)) != string::npos)
+                {
+                    sobaZauzeta = true;
+                    break;
+                }
+            }
+            gostiFile.close();
+        }
+
+        if (!sobaZauzeta)
+        {
+            brojac++;
+            
+            cout << "Broj sobe: " << soba.brojSobe << endl;
+            cout << "Tip sobe: " << soba.tipSobe << endl;
+            cout << "Cijena: " << soba.cijena << endl;
+            cout << "-----------------------------" << endl;
+        }
+    }
+    cout << "Broj slobodnih soba: " << brojac << endl;
+
+    file.close();
 }
+
+
 
 
 
@@ -280,73 +330,23 @@ void uredenjeSobe()
         return;
     }
 
+
     cout << "Unesite novi broj sobe: ";
-    unsigned int noviBrojSobe;
-    cin >> noviBrojSobe;
-
-    Soba postojecaSoba;
-    bool sobaPostoji2 = false;
-    while (file.read((char*)&postojecaSoba.brojSobe, sizeof(postojecaSoba.brojSobe)) && file.read((char*)&postojecaSoba.tipSobe, sizeof(postojecaSoba.tipSobe)) && file.read((char*)&postojecaSoba.cijena, sizeof(postojecaSoba.cijena)))
-    {
-        if (postojecaSoba.brojSobe == noviBrojSobe)
-        {
-            sobaPostoji2 = true;
-            break;
-        }
-    }//provjerava jel unesen broj sobe vec postoji
-
-    if (sobaPostoji2)
-    {
-        cout << "Soba s tim brojem vec postoji!" << endl;
-        return;
-    }
-
+    cin >> soba.brojSobe;
     cout << "Unesite novu klasu sobe (A, B, C): ";
-    char novaKlasa;
-    cin >> novaKlasa;
+    cin >> soba.tipSobe;
     cout << "Unesite novu cijenu za jednu noc: ";
-    double novaCijena;
-    cin >> novaCijena;
+    cin >> soba.cijena;
 
     // Pomice fileov pokazivac nazad na pocetak
     file.seekp(file.tellg() - static_cast<streampos>(sizeof(soba.brojSobe) + sizeof(soba.tipSobe) + sizeof(soba.cijena)));
 
     // Upisuje azurirane podatke nazad u datoteku
-    file.write((char*)&noviBrojSobe, sizeof(noviBrojSobe));
-    file.write((char*)&novaKlasa, sizeof(novaKlasa));
-    file.write((char*)&novaCijena, sizeof(novaCijena));
+    file.write((char*)&soba.brojSobe, sizeof(soba.brojSobe));
+    file.write((char*)&soba.tipSobe, sizeof(soba.tipSobe));
+    file.write((char*)&soba.cijena, sizeof(soba.cijena));
 
     file.close();
-
-    // Azurira broj sobe u gosti.txt
-    ifstream gostiFile("gosti.txt");
-    if (!gostiFile)
-    {
-        cout << "Greska pri otvaranju datoteke gosti.txt!" << endl;
-        return;
-    }
-
-    ofstream tempFile("temp.txt"); // Privremena datoteka za pohranu promijenjenih podataka 
-
-    string line;
-    while (getline(gostiFile, line))
-    {
-        if (line.find("Broj sobe: ") != string::npos)
-        {
-            // Azurira broj sobe
-            tempFile << "Broj sobe: " << noviBrojSobe << endl;
-        }
-        else
-        {
-            tempFile << line << endl;
-        }
-    }
-
-    gostiFile.close();
-    tempFile.close();
-
-    remove("gosti.txt");            
-    rename("temp.txt", "gosti.txt");
 
     cout << "Soba uspjesno uredena." << endl;
 }
@@ -382,7 +382,7 @@ int main()
         cout << "vas odabir: ";
         cin >> izbor;
 
-        switch (izbor){
+        switch (izbor) {
         case 1:
         {
             cout << "Upisite broj sobe: ";
@@ -403,7 +403,7 @@ int main()
         }
         case 3:
         {
-            
+
             dodavanjeGostiju(gost);
             break;
         }
@@ -433,7 +433,7 @@ int main()
             return 0;
             break;
         }
-        default :
+        default:
             cout << "Krivi unos!";
             break;
         }
