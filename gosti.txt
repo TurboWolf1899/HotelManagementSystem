@@ -1,8 +1,0 @@
-Ime: M
-Prezime: D
-Broj sobe: 100
-Vrijeme boravka: 4 noci
-Ime: janjo
-Prezime: janje
-Broj sobe: 99
-Vrijeme boravka: 2 noci

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstring>
 #include <ios>
+
 using namespace std;
 
 struct Soba
@@ -22,6 +23,15 @@ struct Gost
 
 void dodavanjeSobe(Soba soba)
 {
+    system("cls");
+    cout << "Upisite broj sobe: ";
+    cin >> soba.brojSobe;
+    cout << "Upisite klasu sobe (A, B, C): ";
+    cin >> soba.tipSobe;
+    cout << "Unesite cijenu za jednu noc: ";
+    cin >> soba.cijena;
+
+
     if (soba.brojSobe <= 0)
     {
         cout << "Krivi unos sobe" << endl;
@@ -85,6 +95,7 @@ void dodavanjeSobe(Soba soba)
 
 void ispisSoba(Soba soba)
 {
+    system("cls");
     fstream file;
     file.open("sobe.bin", ios::binary | ios::in);
     if (!file)
@@ -106,6 +117,7 @@ void ispisSoba(Soba soba)
 
 void dodavanjeGostiju(Gost* gost)
 {
+    system("cls");
     int index = 0;
     while (index < 100)
     {
@@ -170,9 +182,9 @@ void dodavanjeGostiju(Gost* gost)
     file2.close();
 }
 
-
 void ispisGostiju()
 {
+    system("cls");
     fstream file;
     file.open("gosti.txt", ios::in);
     if (!file)
@@ -185,7 +197,6 @@ void ispisGostiju()
     while (getline(file, line))
     {
         cout << line << endl;
-        
     }
    
     file.close();
@@ -193,6 +204,7 @@ void ispisGostiju()
 
 void ispisSlobodnihSoba()
 {
+    system("cls");
     fstream file;
     file.open("sobe.bin", ios::binary | ios::in);
     if (!file)
@@ -209,7 +221,7 @@ void ispisSlobodnihSoba()
     {
         sobaZauzeta = false;
 
-        // Check if the room is occupied by a guest
+        // Provjerava jel soba zauzeta
         fstream gostiFile("gosti.txt", ios::in);
         if (gostiFile)
         {
@@ -241,11 +253,9 @@ void ispisSlobodnihSoba()
 }
 
 
-
-
-
 void brisanjeGostiju()
 {
+    system("cls");
     fstream inputFile("gosti.txt", ios::in);
     if (!inputFile)
     {
@@ -264,7 +274,7 @@ void brisanjeGostiju()
     char prezime[101];
     cin.getline(prezime, sizeof(prezime));
 
-    bool deleted = false;  // Zastavica - provjera ako je našto izbrisano
+    bool deleted = false;  // Zastavica - provjera ako je nešto izbrisano
 
     string line;
     while (getline(inputFile, line))
@@ -294,10 +304,9 @@ void brisanjeGostiju()
 }
 
 
-
-
 void uredenjeSobe()
 {
+    system("cls");
     fstream file;
     file.open("sobe.bin", ios::binary | ios::in | ios::out);
 
@@ -312,18 +321,18 @@ void uredenjeSobe()
     cin >> brojSobe;
 
     Soba soba;
-    bool sobaPostoji1 = false;
+    bool sobaPostoji = false;
 
     while (file.read((char*)&soba.brojSobe, sizeof(soba.brojSobe)) && file.read((char*)&soba.tipSobe, sizeof(soba.tipSobe)) && file.read((char*)&soba.cijena, sizeof(soba.cijena)))
     {
         if (soba.brojSobe == brojSobe)
         {
-            sobaPostoji1 = true;
+            sobaPostoji = true;
             break;
         }
     }
 
-    if (!sobaPostoji1)
+    if (!sobaPostoji)
     {
         cout << "Soba ne postoji!" << endl;
         file.close();
@@ -331,18 +340,17 @@ void uredenjeSobe()
     }
 
 
-    cout << "Unesite novi broj sobe: ";
-    cin >> soba.brojSobe;
+    // Pomice fileov pokazivac nazad na pocetak
+    file.seekp(file.tellg() - static_cast<streampos>(sizeof(soba.tipSobe) + sizeof(soba.cijena)));
+
     cout << "Unesite novu klasu sobe (A, B, C): ";
     cin >> soba.tipSobe;
     cout << "Unesite novu cijenu za jednu noc: ";
     cin >> soba.cijena;
 
-    // Pomice fileov pokazivac nazad na pocetak
-    file.seekp(file.tellg() - static_cast<streampos>(sizeof(soba.brojSobe) + sizeof(soba.tipSobe) + sizeof(soba.cijena)));
-
+    
     // Upisuje azurirane podatke nazad u datoteku
-    file.write((char*)&soba.brojSobe, sizeof(soba.brojSobe));
+    
     file.write((char*)&soba.tipSobe, sizeof(soba.tipSobe));
     file.write((char*)&soba.cijena, sizeof(soba.cijena));
 
@@ -350,8 +358,6 @@ void uredenjeSobe()
 
     cout << "Soba uspjesno uredena." << endl;
 }
-
-
 
 
 void pause()    //originalni kod - Zlatko Damijanic
@@ -370,28 +376,30 @@ int main()
     while (1)
     {
         system("cls");
-        cout << "Dobrodosli u Hotel Mol\n";
-        cout << "1. Unos soba" << endl;
-        cout << "2. Ispis soba" << endl;
-        cout << "3. Upis gostiju" << endl;
-        cout << "4. Ispis gostiju" << endl;
-        cout << "5. Ispis slobodnih soba" << endl;
-        cout << "6. Brisanje gostiju" << endl;
-        cout << "7. Uredi sobu" << endl;
-        cout << "8. Izlaz iz programa" << endl;
+        cout << "   Dobrodosli u Hotel Mol" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 1. Unos soba              |" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 2. Ispis soba             |" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 3. Upis gostiju           |" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 4. Ispis gostiju          |" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 5. Ispis slobodnih soba   |" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 6. Brisanje gostiju       |" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 7. Uredi sobu             |" << endl;
+        cout << "-----------------------------" << endl;
+        cout << "| 8. Izlaz iz programa      |" << endl;
+        cout << "-----------------------------" << endl;
         cout << "vas odabir: ";
         cin >> izbor;
 
         switch (izbor) {
         case 1:
         {
-            cout << "Upisite broj sobe: ";
-            cin >> soba.brojSobe;
-            cout << "Upisite klasu sobe (A, B, C): ";
-            cin >> soba.tipSobe;
-            cout << "Unesite cijenu za jednu noc: ";
-            cin >> soba.cijena;
-
             dodavanjeSobe(soba);
             break;
         }
@@ -403,7 +411,6 @@ int main()
         }
         case 3:
         {
-
             dodavanjeGostiju(gost);
             break;
         }
