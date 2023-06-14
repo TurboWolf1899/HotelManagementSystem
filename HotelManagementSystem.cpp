@@ -370,7 +370,7 @@ void pause()    //originalni kod - Zlatko Damijanic
 
 int main()
 {
-    int izbor;
+    char izbor;     //promjenjeno iz int-a u char da se program ne zblesira kada upisem bilo kaj kaj nije broj.
     Soba soba = { 0, '\0', 0.0 };
     Gost* gost = new Gost[100];
     while (1)
@@ -398,43 +398,43 @@ int main()
         cin >> izbor;
 
         switch (izbor) {
-        case 1:
+        case '1':
         {
             dodavanjeSobe(soba);
             break;
         }
 
-        case 2:
+        case '2':
         {
             ispisSoba(soba);
             break;
         }
-        case 3:
+        case '3':
         {
             dodavanjeGostiju(gost);
             break;
         }
-        case 4:
+        case '4':
         {
             ispisGostiju();
             break;
         }
-        case 5:
+        case '5':
         {
             ispisSlobodnihSoba();
             break;
         }
-        case 6:
+        case '6':
         {
             brisanjeGostiju();
             break;
         }
-        case 7:
+        case '7':
         {
             uredenjeSobe();
             break;
         }
-        case 8:
+        case '8':
         {
             cout << "Izlaz iz programa!";
             return 0;
